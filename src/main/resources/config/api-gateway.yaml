@@ -1,52 +1,74 @@
 server:
   port: 8060
-  
+
 spring:
   application:
     name: api-gateway
 
   cloud:
+    compatibility-verifier:
+      enabled: false
+
     gateway:
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-        
+        - PreserveHostHeader
+        - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
 
+      # CORS global
       globalcors:
         add-to-simple-url-handler-mapping: true
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://localhost:3000"
-            allowedMethods: "GET,POST,PUT,DELETE,OPTIONS"
+            allowedOrigins:
+              - "http://localhost:3000"
+              - "http://127.0.0.1:3000"
+            allowedMethods:
+              - "GET"
+              - "POST"
+              - "PUT"
+              - "DELETE"
+              - "OPTIONS"
             allowedHeaders: "*"
-            allowCredentials: true
             exposedHeaders: "*"
+            allowCredentials: true
 
+      # Definición de rutas
       routes:
+        # Microservicio de grupos
+        - id: ms-grupos
+          uri: lb://ms-grupos
+          predicates:
+            - Path=/api/grupos/**
+
+        # Rutas específicas del servicio de autenticación
         - id: ms-auth
           uri: lb://ms-auth
           predicates:
-            - Path=/ms-auth/**, /auth/**, /oauth2/**, /login/**, /logout/**
+            - Path=/auth/**, /oauth2/**, /login/**, /logout/**, /ms-auth/**
 
   main:
     web-application-type: reactive
 
-# AGREGAR ESTA CONFIGURACIÓN PARA FORZAR EL PASO DE HEADERS
+# Configuración de monitoreo
 management:
   endpoints:
     web:
       exposure:
         include: "*"
 
+# Registro en Eureka
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
 
-# CONFIGURACIÓN DE LOGGING PARA DEBUG
+# Logging detallado (útil para depurar Gateway)
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
