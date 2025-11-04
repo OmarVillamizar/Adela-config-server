@@ -22,7 +22,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     generate-ddl: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
