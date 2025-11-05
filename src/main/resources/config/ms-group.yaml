@@ -1,21 +1,15 @@
 server:
   port: 9001
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-
 spring:
   application:
-    name: ms-grupos
+    name: ms-groups
 
-  cloud:
-    compatibility-verifier:
-      enabled: false
+  config:
+    import: "optional:configserver:http://config-server:8088"
 
   datasource:
-    url: jdbc:mysql://localhost:3306/group_service_db
+    url: jdbc:mysql://mysql:3306/group_service_db
     username: root
     password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -30,11 +24,18 @@ spring:
       hibernate:
         format_sql: true
 
-# JWT Configuration 
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://service-registry:8761/eureka/
+
 jwt:
   secret: ${JWT_SECRET_KEY}
 
-# Swagger Documentation
 springdoc:
   api-docs:
     enabled: true

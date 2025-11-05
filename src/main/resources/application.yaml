@@ -2,7 +2,24 @@ server:
   port: 8088
 
 spring:
-  profiles:
-    active: native
   application:
     name: config-server
+
+  profiles:
+    active: native
+
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
+
+eureka:
+  instance:
+    hostname: config-server
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://service-registry:8761/eureka/
+ 
