@@ -33,6 +33,7 @@ spring:
               - "POST"
               - "PUT"
               - "DELETE"
+              - "PATCH"
               - "OPTIONS"
             allowedHeaders: "*"
             exposedHeaders: "*"
@@ -40,17 +41,39 @@ spring:
 
       # Definición de rutas
       routes:
+        # Rutas públicas de autenticación
+        - id: ms-auth-public
+          uri: lb://ms-auth
+          predicates:
+            - Path=/auth/**, /oauth2/**, /login/**, /logout/**
+
+        # Rutas internas de ms-auth
+        - id: ms-auth-internal
+          uri: lb://ms-auth
+          predicates:
+            - Path=/ms-auth/**
+          filters:
+            - StripPrefix=1
+
         # Microservicio de grupos
         - id: ms-grupos
           uri: lb://ms-grupos
           predicates:
             - Path=/api/grupos/**
 
-        # Rutas específicas del servicio de autenticación
-        - id: ms-auth
-          uri: lb://ms-auth
+        # Microservicio de cuestionarios
+        - id: ms-quest
+          uri: lb://ms-quest
           predicates:
-            - Path=/auth/**, /oauth2/**, /login/**, /logout/**, /ms-auth/**
+            - Path=/api/cuestionarios/**
+
+        # Microservicio de envío de correos
+        - id: ms-email
+          uri: lb://ms-email
+          predicates:
+            - Path=/mail/**
+          filters:
+            - StripPrefix=0
 
   main:
     web-application-type: reactive

@@ -1,0 +1,44 @@
+server:
+  port: 9002
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+spring:
+  application:
+    name: ms-quest
+
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/quest_db
+    username: root
+    password: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET_KEY}
+
+# Swagger Documentation
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /docs/swagger-ui.html
