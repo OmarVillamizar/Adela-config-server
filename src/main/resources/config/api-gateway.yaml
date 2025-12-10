@@ -36,10 +36,10 @@ spring:
             allowCredentials: true
 
       routes:
-        - id: ms-groups
-          uri: lb://ms-groups
-          predicates:
-            - Path=/api/grupos/**
+#        - id: ms-groups
+#          uri: lb://ms-groups
+#          predicates:
+#            - Path=/api/grupos/**
         - id: ms-auth
           uri: lb://ms-auth
           predicates:
